@@ -33,6 +33,7 @@ module.exports = function (api) {
     plugins: ["react-native-reanimated/plugin"],
   };
 };
+
 2. Update Imports
 Our imports in the upcoming lecture will now look like this:
 
