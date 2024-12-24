@@ -1,12 +1,25 @@
-import React, { useContext, useRef, useEffect } from "react";
+import React, { useContext, useRef, useEffect, use } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { Context as BlogContext } from "../context/BlogContext";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 
 const IndexScreen = ({navigation}) => {
-  const { state, addBlogPost, deleteBlogPost } = useContext(BlogContext);
+  const { state, addBlogPost, deleteBlogPost, getBlogPosts } = useContext(BlogContext);
+
   const flatListRef = useRef(null);
+
+  useEffect(() => {
+    //getBlogPosts();
+  const listner =  navigation.addListener('didFocus', () => {
+      getBlogPosts();
+    });
+
+    return () => {
+      listner.remove();
+    }
+
+  }, []);
 
   useEffect(() => {
     if (flatListRef.current) {
@@ -16,10 +29,7 @@ const IndexScreen = ({navigation}) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Text>Index Screen</Text>
-      <TouchableOpacity style={styles.touchOpacity}>
-        <Text style={styles.text}>Add Post</Text>
-      </TouchableOpacity>
+      
       <FlatList
         ref={flatListRef}
         data={state}
@@ -32,7 +42,7 @@ const IndexScreen = ({navigation}) => {
                 () => {
                     navigation.navigate('Show', {id: item.id});
                 }
-              }>{item.title}    -     {item.id}</Text>
+              }>{item.title}    -  {item.description} -   {item.id}</Text>
               <FontAwesome name="trash" size={24} color="black" 
               onPress={()=>{
                 deleteBlogPost(item.id);

@@ -1,5 +1,6 @@
 import React from 'react';
 import createDataContext from './createDataContext';
+import jsonServer from '../api/jsonServer';
 
 const reducerFunc = (state, action) => {
     console.log(action);
@@ -17,35 +18,67 @@ const reducerFunc = (state, action) => {
                 return post.id === action.payload.id ? action.payload : post;
             });
             break   
+        case 'get_blogposts':
+            return action.payload;
+            break
         default:
             return state;
     }
 }
 
-const addBlogPost = (dispatch) => {
+/*const addBlogPost = (dispatch) => {
     return (title, description, callBack) => {
         dispatch({type: 'add_blogpost', payload: {title, description}});
         callBack();
     }
         
+}*/
+
+const addBlogPost = (dispatch) => {
+    return async (title, description, callBack) => {
+        await jsonServer.post('/blogPosts', {title, description});
+        callBack();
+    }
 }
 
-const deleteBlogPost = (dispatch) => {
+/*const deleteBlogPost = (dispatch) => {
     return (id) => dispatch({type: 'delete_blogpost', payload: id});
+}*/
+
+const deleteBlogPost = (dispatch) => {  
+    return async (id) => {
+        await jsonServer.delete(`/blogPosts/${id}`);
+        dispatch({type: 'delete_blogpost', payload: id});
+    }
 }
 
-const editBlogPost = (dispatch) => {
+/*const editBlogPost = (dispatch) => {
     return (id, title, description, callBack) => {
         dispatch({type: 'edit_blogpost', payload: {id, title, description}});
         callBack();
+    }
+}*/
+
+const editBlogPost = (dispatch) => {
+    return async (id, title, description, callBack) => {
+        await jsonServer.put(`/blogPosts/${id}`, {title, description});
+        dispatch({type: 'edit_blogpost', payload: {id, title, description}});
+        callBack();
+    }
+}
+
+const getBlogPosts = (dispatch) => {
+    return async () => {
+        const response = await jsonServer.get('/blogPosts');
+        dispatch({type: 'get_blogposts', payload: response.data});
     }
 }
 
 
 export const {Context, Provider} = createDataContext(
     reducerFunc, 
-    {addBlogPost,deleteBlogPost, editBlogPost}, 
-    [{title: 'Test Post', description: 'Test Description', id: 1}]);
+    {addBlogPost,deleteBlogPost, editBlogPost, getBlogPosts}, 
+    []);
 
 
  

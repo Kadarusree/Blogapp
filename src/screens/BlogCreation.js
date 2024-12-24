@@ -6,10 +6,8 @@ import BlogForm from "../components/BlogForm";
 const BlogCreation = ({ navigation }) => {
   const { addBlogPost } = useContext(BlogContext);
   return <BlogForm
-  title={""}
-  setBlogTitle={(text) => {}}
-  description={""}
-    setBlogDescription={(text) => {}}
+  blogTitle={""}
+  blogDescription={""}
     onSubmit={(title, description) => {
     addBlogPost(title, description, () => {
       console.log("callback");
