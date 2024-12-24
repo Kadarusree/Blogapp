@@ -21,7 +21,7 @@ const EditScreen = ({ navigation }) => {
       blogDescription={blogPost.description}
       onSubmit={(title, description) => {
         editBlogPost(id, title, description, () => {
-          navigation.navigate("Index");
+          navigation.pop();
         });
       }}
     ></BlogForm>
